@@ -9,21 +9,26 @@
 let distance = 0
 
 // setup
-radio.setGroup(5)
+radio.setGroup(9)
 basic.showIcon(IconNames.Happy)
 
 // button a
-basic.forever (function () {
-    distance = sonar.ping(DigitalPin.P8, DigitalPin.P12, PingUnit.Centimeters)
-    if (distance < 10) {
-        radio.sendString("Too Close")
-        basic.pause(500)
-    }
-})
+input.onButtonPressed(Button.A, function () {
+    while (true) {
+        distance = sonar.ping(DigitalPin.P8, DigitalPin.P12, PingUnit.Centimeters)
 
-// reciever
-radio.onReceivedString(function (receivedString) {
-    basic.clearScreen()
-    basic.showString(receivedString)
-    basic.showIcon(IconNames.Happy)
+        // distance is less than 10
+            if (distance < 10) {
+                basic.clearScreen()
+                radio.sendString("Too Close")
+                basic.showIcon(IconNames.No)
+                basic.pause(1000)
+
+            } else {
+                basic.clearScreen()
+                basic.showNumber(distance)
+                basic.showIcon(IconNames.Yes)
+                basic.pause(1000)
+            }  
+    }
 })
